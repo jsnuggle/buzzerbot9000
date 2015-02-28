@@ -1,18 +1,19 @@
+#!/usr/bin/env bash
 # Install DNS update cron
 
-config() {
-    node bin/get_config.js $1
-}
+BOTHOME_DIR=$( cd "$( dirname $( dirname "${BASH_SOURCE[0]}" ) )" && pwd )
+CRON_NAME="#DDNS_update_cron"
 
-DDNS_TIME="1,6,11,16,21,26,31,36,41,46,51,56 * * * * sleep 43"
-DDNS_KEY=$(config freedns_key)
-DDNS_CMD="wget -O - http://freedns.afraid.org/dynamic/update.php?$DDNS_KEY"
-DDNS_CRON="$DDNS_TIME ; $DDNS_CMD >> /home/pi/DNS.log 2>&1 &"
+CRON_TIME="1,6,11,16,21,26,31,36,41,46,51,56 * * * * sleep 43"
+DDNS_CMD="$BOTHOME_DIR/bin/update_ddns.sh"
+LOGPATH="$BOTHOME_DIR/logs"
 
-echo "Initing DDNS and adding DDNS cron to crontab:"
+mkdir -p $LOGPATH
+DDNS_CRON="$CRON_TIME ; $DDNS_CMD >> $LOGPATH/cron_DNS.log 2>&1 &"
+
+echo "Adding DDNS cron to crontab:"
 echo "$DDNS_CMD"
-$DDNS_CMD
-crontab -l | sed "/$DDNS_KEY/d" > temp_cron
+echo "$CRON_NAME ;" >> temp_cron
 echo "$DDNS_CRON" >> temp_cron
 crontab temp_cron
 rm temp_cron
