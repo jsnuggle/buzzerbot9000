@@ -1,30 +1,31 @@
 {
   "name": "buzzerbot9000",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Buzzerbot 9000",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/imightbeamy/buzzerbot9000.git"
+    "url": "https://github.com/jsnuggle/buzzerbot9000.git"
   },
   "author": "Amy Ciavolino <amyciav@gmail.com>",
   "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "921b65014492d0955c7f5c938e9504eb2f6c571a",
   "bugs": {
-    "url": "https://github.com/imightbeamy/buzzerbot9000/issues"
+    "url": "https://github.com/jsnuggle/buzzerbot9000/issues"
   },
-  "dependencies": [
-    "configure",
-    "express",
-    "logfmt",
-    "pi-gpio",
-    "twilio",
-    "underscore",
-    "moment",
-    "sqlite3"
-  ]
+  "dependencies": {
+    "configure": ">= 0.0.1",
+    "express": ">= 4.12.0",
+    "mkdirp": ">=0.5.0",
+    "body-parser": ">= 1.12.0",
+    "logfmt": ">= 1.2.0",
+    "onoff": ">= 1.0.2",
+    "twilio": ">= 1.11.1",
+    "underscore": ">= 1.8.2",
+    "moment": ">= 2.9.0",
+    "limiter": ">= 1.0..5"
+  }
 }
