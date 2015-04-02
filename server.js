@@ -4,6 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var config = require('configure');
 var twilio = require('twilio');
+var logger = require('./lib/logger');
 
 var Opener = require('./lib/opener.js');
 var Doorbell = require('./lib/doorbell.js');
@@ -15,7 +16,7 @@ var app = express(),
     opener = new Opener(config, new Validators(config)),
     doorbell = new Doorbell(config);
 
-console.log('Starting...');
+logger.info('Starting...');
 
 doorbell.listen();
 
@@ -26,19 +27,23 @@ app.post('/sms', twilio.webhook(), function (request, response) {
     var sms = request.body;
 
     opener.open_door(sms.Body, sms.From, function (success) {
-        var twil_res = new twilio.TwimlResponse();
+        var twilioResponse = new twilio.TwimlResponse();
         var message = success ? config.success_message : config.fail_message;
-        twil_res.message(message);
-        console.log('"' + message + '"', sms.Body, sms.From);
+        twilioResponse.message(message);
+        logger.info('"' + message + '"', sms.Body, sms.From);
 
         if (config.send_reply) {
-            response.send(twil_res);
+            response.send(twilioResponse);
         }
     });
 
 });
 
+app.get('/status', function(request, response) {
+    response.send("server is up");
+});
+
 var port = Number(config.port);
 app.listen(port, function () {
-    console.log('Listening for the opener signal via HTTP on port ' + port);
+    logger.info('Listening for the opener signal via HTTP on port ' + port);
 });
