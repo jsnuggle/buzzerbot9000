@@ -1,0 +1,53 @@
+{
+    "gpio" : {
+        "opener" : {
+            "output_pin": 17
+        },
+        "doorbell": {
+            "input_pin": 12,
+            "output_pin": 18
+        }
+    },
+    "server" : {
+        "freedns_key" : "Smh5NDA3YkI0dnpKbThMOTJMOU1qeno1OjEzNzIyMTE1",
+        "port": 5000,
+        "admin_user" : "jclarke",
+        "admin_pass" : "CP2Kw=NAw#?;gkWVqtyHgrw*vbpPXy7i8ojyEwU4iidaa[JJqB]"
+    },
+    "twilio" : {
+        "token" : "5d708eb548cd09af7921586f52395ee3",
+        "sid" : "AC540c896240feb91f4d0525c490f63dda",
+        "number" : "+16466633050"
+    },
+    "opener" : {
+        "release_seconds": 15,
+        "success_message" : "Welcome! Nice to see you!",
+        "fail_message" : "Sorry, I can't let you in.",
+        "send_reply" : false,
+        "passwords": {
+            "arbydog": {
+                "whitelist": [
+                    "917-679-9935",
+                    "917-969-1220"
+                ],
+                "success_message": "Welcome home! Nice to see you!",
+                "fail_message": "Sorry, your magic has no power here"
+            },
+            "partytime": {
+                "start": "2014-04-11",
+                "end": "2014-04-13",
+                "success_message": "Welcome to our party! We're in Apt #4",
+                "fail_message": "Hmm... it's not party time yet"
+            }
+        }
+    },
+    "doorbell": {
+        "light_seconds": 10,
+        "send_sms": true,
+        "message": "Someone's at the door.",
+        "subscribers": [
+            "+19176799935",
+            "+19179691220"
+        ]
+    }
+}

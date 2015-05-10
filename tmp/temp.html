@@ -1,0 +1,179 @@
+<!-- index.html -->
+<html>
+  <head>
+    <title>Buzzerbot Admin</title>
+    <script src="https://fb.me/react-0.13.1.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.1.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="/bower/react-bootstrap/react-bootstrap.min.js"></script>
+    <script src="/bower/classnames/index.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type="text/jsx">
+
+        var Navbar = ReactBootstrap.Navbar;
+        var Nav = ReactBootstrap.Nav;
+        var TabbedArea = ReactBootstrap.TabbedArea;
+        var TabPane = ReactBootstrap.TabPane;
+        var Button = ReactBootstrap.Button;
+        var Input = ReactBootstrap.Input;
+        var CollapsableMixin = ReactBootstrap.CollapsableMixin;
+
+        var TopNav = React.createClass({
+            render: function() {
+                return (
+                    <Navbar brand='Buzzerbot' inverse toggleNavKey={0} />
+               );
+            }
+        }); 
+
+        var ControlledTabArea = React.createClass({
+            getInitialState() {
+                return {
+                    key: 2
+                };
+            },
+
+            handleSelect(key) {
+                this.setState({key});
+            },
+
+            render() {
+                return (
+                    <TabbedArea activeKey={this.state.key} onSelect={this.handleSelect}>
+                        <TabPane eventKey={1} tab='Status'><Status /></TabPane>
+                        <TabPane eventKey={2} tab='Settings'><Settings url="config.json" /></TabPane>
+                        <TabPane eventKey={3} tab='Logs'><Logs /></TabPane>
+                    </TabbedArea>
+                );
+            }
+        });
+
+        var Status = React.createClass({
+            render: function() {
+                return (
+                    <div>the status</div>
+                );
+            }
+        });
+
+        var Logs = React.createClass({
+            render: function() {
+                // cron log
+                // doorbell log
+                // opener log
+                return (
+                    <div>the logs</div>
+                );
+            }
+        });
+
+        var Settings = React.createClass({
+            getInitialState: function() {
+                return {data: {}};
+            },
+
+            componentDidMount: function() {
+                $.ajax({
+                    url: this.props.url,
+                    dataType: 'json',
+
+                    success: function(data) {
+                        this.setState({data: data});
+                    }.bind(this),
+
+                    error: function(xhr, status, err) {
+                        console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                });
+            },
+
+            handleSubmit: function(e) {
+                e.preventDefault();
+                console.log("handleSubmit");
+            },
+
+            render: function() {
+                var stateSet = !$.isEmptyObject(this.state.data);
+                var doorbellSMS = stateSet && this.state.data.doorbell.send_sms;
+                var releaseSMS = stateSet && this.state.data.opener.send_reply;
+                var twilioNumber = stateSet && this.state.data.twilio.number;
+
+                return (
+                    <div>
+                        <form className='form-horizontal' onSubmit={this.handleSubmit}>
+                            <Input type='select' label='Doorbell SMS' value={doorbellSMS ? '1' : '0'} defaultValue='1' labelClassName='col-xs-2' wrapperClassName='col-xs-2' >
+                                <option value='1'>On</option>
+                                <option value='0'>Off</option>
+                            </Input>
+                            <Input type='select' label='Door Release Duration' 
+                                defaultValue='10' labelClassName='col-xs-2' wrapperClassName='col-xs-2' help="seconds" >
+                                <option value='10'>10</option>
+                                <option value='15'>15</option>
+                                <option value='20'>20</option>
+                                <option value='30'>30</option>
+                            </Input>
+                            <Input type='select' label='Release SMS' value={releaseSMS ? '1' : '0'} defaultValue='1' labelClassName='col-xs-2' wrapperClassName='col-xs-2' >
+                                <option value='1'>On</option>
+                                <option value='0'>Off</option>
+                            </Input>
+                            <Button type='submit' bsStyle='primary'>Save</Button>
+                        </form>
+                        <AdvancedSettings>
+                            <form className='form-horizontal'>
+                                <Input type='static' label='Twilio Number' value={twilioNumber} labelClassName='col-xs-2' wrapperClassName='col-xs-10' />
+                            </form>
+                        </AdvancedSettings>
+                    </div>
+                );
+            }            
+        });
+
+        var AdvancedSettings = React.createClass({
+            mixins: [CollapsableMixin],
+
+            getCollapsableDOMNode: function(){
+                return this.refs.panel.getDOMNode();
+            },
+
+            getCollapsableDimensionValue: function(){
+                return this.refs.panel.getDOMNode().scrollHeight;
+            },
+
+            onHandleToggle: function(e){
+                e.preventDefault();
+                this.setState({expanded:!this.state.expanded});
+            },
+
+            render: function(){
+                var styles = this.getCollapsableClassSet();
+                var text = this.isExpanded() ? 'Hide' : 'Show';
+                return (
+                <div>
+                    <Button bsStyle="link" onClick={this.onHandleToggle}>{text} Advanced</Button>
+                    <div ref='panel' className={classNames(styles)}>
+                    {this.props.children}
+                    </div>
+                </div>
+                );
+            }
+        });
+
+        // <!--<Button>Cancel</Button>
+        // <Button bsStyle="primary">Save changes</Button> -->
+
+        React.render(
+            <div>
+                <TopNav />
+                <div className="container">
+                    <ControlledTabArea />
+                </div>
+            </div>,
+            document.getElementById('container')
+        );
+    </script>
+  </body>
+</html>
