@@ -11,6 +11,7 @@ var logger = require('./lib/logger');
 var Opener = require('./lib/opener.js');
 var Doorbell = require('./lib/doorbell.js');
 var Validators = require('./lib/validators.js');
+var Heartbeat = require('./lib/heartbeat.js');
 
 process.env.TWILIO_AUTH_TOKEN = config.twilio_token;
 
@@ -28,7 +29,8 @@ var auth = function(req, res, next) {
 
 var app = express(),
     opener = new Opener(config, new Validators(config)),
-    doorbell = new Doorbell(config);
+    doorbell = new Doorbell(config),
+    heartbeat = new Heartbeat(60000);
 
 logger.info('Starting...');
 
@@ -56,9 +58,11 @@ app.post('/sms', twilio.webhook(), function (req, res) {
 
 app.use(auth);
 
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 var port = Number(config.port);
 app.listen(port, function () {
     logger.info('Listening for the opener signal via HTTP on port ' + port);
+    heartbeat.start();
 });
