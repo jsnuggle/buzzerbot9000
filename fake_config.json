@@ -9,15 +9,15 @@
         }
     },
     "server" : {
-        "freedns_key" : "Smh5NDA3YkI0dnpKbThMOTJMOU1qeno1OjEzNzIyMTE1",
+        "freedns_key" : "<YOUR KEY HERE>",
         "port": 5000,
-        "admin_user" : "jclarke",
-        "admin_pass" : "CP2Kw=NAw#?;gkWVqtyHgrw*vbpPXy7i8ojyEwU4iidaa[JJqB]"
+        "admin_user" : "<YOUR FREEDNS USER>",
+        "admin_pass" : "<YOUR FREEDNS PASS>"
     },
     "twilio" : {
-        "token" : "5d708eb548cd09af7921586f52395ee3",
-        "sid" : "AC540c896240feb91f4d0525c490f63dda",
-        "number" : "+16466633050"
+        "token" : "<YOUR TWILIO AUTH TOKEN>",
+        "sid" : "<YOUR TWILIO SID>",
+        "number" : "<YOUR TWILIO NUMBER>"
     },
     "opener" : {
         "release_seconds": 15,
@@ -46,8 +46,8 @@
         "send_sms": true,
         "message": "Someone's at the door.",
         "subscribers": [
-            "+19176799935",
-            "+19179691220"
+            "<PHONE NUMBER 1>",
+            "<PHONE NUMBER 2>"
         ]
     }
 }
